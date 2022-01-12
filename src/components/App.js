@@ -1,6 +1,19 @@
+import { useState } from "react";
 import "../styles/App.scss";
 
 function App() {
+  const [numberOfErrors, setNumberOfErrors] = useState(0);
+
+  const handleClickBtn = () => {
+    setNumberOfErrors(numberOfErrors + 1);
+    console.log(numberOfErrors);
+  };
+
+  const handleKeyUp = (event) => {
+    event.preventDefault();
+    console.log(event.key);
+  };
+
   return (
     <div className="page">
       <header>
@@ -8,6 +21,7 @@ function App() {
       </header>
       <main className="main">
         <section>
+          <button onClick={handleClickBtn}>Incrementar</button>
           <div className="solution">
             <h2 className="title">Solución:</h2>
             <ul className="letters">
@@ -33,7 +47,7 @@ function App() {
               <li className="letter">x</li>
             </ul>
           </div>
-          <form className="form">
+          <form className="form" onSubmit={handleKeyUp}>
             <label className="title" htmlFor="last-letter">
               Escribe una letra:
             </label>
@@ -44,10 +58,11 @@ function App() {
               type="text"
               name="last-letter"
               id="last-letter"
+              onKeyUp={handleKeyUp}
             />
           </form>
         </section>
-        <section className="dummy error-5">
+        <section className={"dummy error-" + numberOfErrors}>
           <span className="error-13 eye"></span>
           <span className="error-12 eye"></span>
           <span className="error-11 line"></span>
