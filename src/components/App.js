@@ -1,35 +1,51 @@
 import { useState } from "react";
+import { useEffect } from "react/cjs/react.development";
+import api from "../services/api";
 import "../styles/App.scss";
 
 function App() {
   const [numberOfErrors, setNumberOfErrors] = useState(0);
   const [lastLetter, setLastLetter] = useState("");
   const [userLetter, setUserLetter] = useState([]);
-  const [word, setWord] = useState("katakroker");
+  const [word, setWord] = useState("");
+  const [rightLetters, setRightLetters] = useState([]);
+  const [wrongLetters, setWrongLetters] = useState([]);
+
+  useEffect(() => {
+    api().then((response) => {
+      setWord(response);
+    });
+  }, []);
 
   const letter = /[a-zA-Z]/;
 
   console.log(word);
-
+  //no funciona
   const wordLetters = word.split("");
   console.log(wordLetters);
 
   const renderWord = () => {
-    return wordLetters
-      .filter((letter) => {
-        return letter.includes(userLetter);
-      })
-      .map((letter, index) => {
-        if (letter.includes(lastLetter)) {
-          //const rightLetter = [...word, userLetter];
-          return (
-            <li key={index} className="letter">
-              {letter}
-            </li>
-          );
-        }
-        return <li key={index} className="letter"></li>;
-      });
+    return wordLetters.map((letter, index) => {
+      // if (letter.includes(userLetter)) {
+      //   rightLetters.push(letter);
+      //   setRightLetters(rightLetters);
+      // }
+      return (
+        <li key={index} className="letter">
+          {letter.includes(userLetter) ? userLetter : ""}
+        </li>
+      );
+    });
+  };
+  // para revisar
+  const renderErrorLetters = () => {
+    return !wordLetters.map((letter, index) => {
+      return (
+        <li key={index} className="letter">
+          {letter.includes(userLetter) ? "" : userLetter}
+        </li>
+      );
+    });
   };
 
   const handleClickBtn = () => {
@@ -65,13 +81,7 @@ function App() {
           </div>
           <div className="error">
             <h2 className="title">Letras falladas:</h2>
-            <ul className="letters">
-              <li className="letter">f</li>
-              <li className="letter">q</li>
-              <li className="letter">h</li>
-              <li className="letter">p</li>
-              <li className="letter">x</li>
-            </ul>
+            <ul className="letters"> {renderErrorLetters()}</ul>
           </div>
           <form className="form" onSubmit={handleSubmit}>
             <label className="title" htmlFor="last-letter">
