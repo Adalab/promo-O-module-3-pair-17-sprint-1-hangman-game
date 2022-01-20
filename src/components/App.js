@@ -8,41 +8,35 @@ function App() {
   const [lastLetter, setLastLetter] = useState("");
   const [userLetter, setUserLetter] = useState([]);
   const [word, setWord] = useState("");
-  const [rightLetters, setRightLetters] = useState([]);
-  const [wrongLetters, setWrongLetters] = useState([]);
 
   useEffect(() => {
     api().then((response) => {
-      setWord(response);
+      console.log(response);
+      setWord(response.word);
     });
   }, []);
 
   const letter = /[a-zA-Z]/;
 
-  console.log(word);
-  //no funciona
-  const wordLetters = word.split("");
-  console.log(wordLetters);
 
   const renderWord = () => {
+    const wordLetters = word.split("");
     return wordLetters.map((letter, index) => {
-      // if (letter.includes(userLetter)) {
-      //   rightLetters.push(letter);
-      //   setRightLetters(rightLetters);
-      // }
+     const existLetter = (userLetter.includes(letter))
       return (
         <li key={index} className="letter">
-          {letter.includes(userLetter) ? userLetter : ""}
+          {userLetter.includes(letter) ? letter : ""}
         </li>
       );
     });
   };
-  // para revisar
+
   const renderErrorLetters = () => {
-    return !wordLetters.map((letter, index) => {
-      return (
+    const errorLetters = userLetter.filter(letter => word.includes(letter) === false)
+    return errorLetters.map((letter, index) => {
+          return (
         <li key={index} className="letter">
-          {letter.includes(userLetter) ? "" : userLetter}
+          {letter}
         </li>
       );
     });
